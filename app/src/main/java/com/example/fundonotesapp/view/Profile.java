@@ -108,10 +108,6 @@ public class Profile extends DialogFragment {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences sharedPreferences = getContext().getSharedPreferences("com.example.fundonotesapp.checkbox", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("remember","false");
-                editor.apply();
                 loginViewModel.normalLogout();
                 sharedViewModel.set_gotoLoginPageStatus(true);
             }

@@ -36,8 +36,15 @@ public class SharedViewModel extends ViewModel {
     private MutableLiveData<String> _queryText = new MutableLiveData<String>();
     public LiveData<String> queryText = (LiveData<String>) _queryText;
 
+    private MutableLiveData<Boolean> _userLoggedIn = new MutableLiveData<Boolean>();
+    public LiveData<Boolean> userLoggedIn = (LiveData<Boolean>) _userLoggedIn;
+
     public void set_gotoRegisterPageStatus(Boolean status) {
         this._gotoRegisterPageStatus.setValue(status);
+    }
+
+    public void setUserLoggedIn(Boolean status){
+        this._userLoggedIn.setValue(status);
     }
 
     public void set_gotoLoginPageStatus(Boolean status) {

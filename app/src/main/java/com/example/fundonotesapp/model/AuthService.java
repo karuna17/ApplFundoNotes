@@ -110,55 +110,12 @@ public class AuthService {
         mAuth.signOut();
     }
 
-
-
-
-//    public void setDetailsToFireStore(User user1) {
-//        String name = user1.getName();
-//        String email = user1.getEmail();
-//        String password = user1.getPasswod();
-//        String uri = user1.getUri();
-//        userID = mAuth.getCurrentUser().getUid();
-//        documentReference = fstore.collection("users").document(userID);
-//        Map<String, Object> userDB = new HashMap<>();
-//        userDB.put("fName", name);
-//        userDB.put("u_email", email);
-//        userDB.put("u_pass", password);
-//        userDB.put("u_img", uri);
-//
-//        documentReference.set(userDB).addOnSuccessListener(new OnSuccessListener<Void>() {
-//            @Override
-//            public void onSuccess(Void unused) {
-//                Log.d(TAG, "onSuccess: User Details Stored Successfully" + userID);
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Log.d(TAG, "onSuccess: Failed To Store User Details" + e.toString());
-//            }
-//        });
-//    }
-
-//    public void getUserDetailsFromFirestore(User user, AuthListener listener) {
-//        userID = currentUser.getUid();
-//        documentReference = fstore.collection("users").document(userID);
-//        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    String profile_name = task.getResult().getString("fName");
-//                    String profile_email = task.getResult().getString("u_email");
-//                    String profile_uri = task.getResult().getString("u_img");
-//                    User user = new User(profile_uri, profile_name, profile_email);
-//                    listener.onAuthComplete(true, "Details fetch successfully");
-//                } else {
-//                    listener.onAuthComplete(false, "Failed to fetch Details");
-//                }
-//            }
-//        });
-//
-//    }
-
+    public void getLoginStatus(AuthListener listener) {
+        if (currentUser != null) {
+            mAuth.addAuthStateListener(firebaseAuth ->
+                    listener.onAuthComplete(true, "User Logged In"));
+        }
+    }
 }
 
 

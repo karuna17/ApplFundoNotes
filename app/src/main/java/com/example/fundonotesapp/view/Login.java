@@ -67,16 +67,7 @@ public class Login extends Fragment {
         createNewAcc = v.findViewById(R.id.create_new_acc);
         forgotPass = v.findViewById(R.id.forgot_password);
         progBar = v.findViewById(R.id.progress_bar);
-        rememberMe = v.findViewById(R.id.remeber_me);
 
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("com.example.fundonotesapp.checkbox", Context.MODE_PRIVATE);
-        String rememberOpt = sharedPreferences.getString("remember", "");
-        if (rememberOpt.equals("true")) {
-            setRememberMe();
-        } else if (rememberOpt.equals("false")) {
-            Toast.makeText(getContext(), "Please SignIn", Toast.LENGTH_SHORT).show();
-        }
-        login();
         return v;
     }
 
@@ -89,6 +80,7 @@ public class Login extends Fragment {
         sharedViewModel = new ViewModelProvider(getActivity(), new SharedViewModelFactory()).get(SharedViewModel.class);
 
         // call All the methods
+        login();
         creatingNewAcc();
         resetingNewPassword();
     }
@@ -179,27 +171,5 @@ public class Login extends Fragment {
             }
         });
     }
-
-    private void setRememberMe() {
-        rememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (buttonView.isChecked()) {
-                    SharedPreferences sharedPreferences =
-                            getContext().getSharedPreferences("com.example.fundonotesapp.checkbox", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("remember", "true");
-                    editor.apply();
-                } else if (buttonView.isChecked()) {
-                    SharedPreferences sharedPreferences =
-                            getContext().getSharedPreferences("com.example.fundonotesapp.checkbox", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("remember", "false");
-                    editor.apply();
-                }
-            }
-        });
-    }
-
 
 }

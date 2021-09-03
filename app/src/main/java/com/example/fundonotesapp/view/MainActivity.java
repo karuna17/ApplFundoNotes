@@ -94,6 +94,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        loginViewModel.checkUserExistence();
+        loginViewModel.isUserLoggedIn.observe(MainActivity.this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean status) {
+                if (status) {
+                    sharedViewModel.set_gotoHomePageStatus(true);
+                } else {
+                    sharedViewModel.set_gotoLoginPageStatus(true);
+                }
+            }
+        });
     }
 
     private void gotoHomePage() {

@@ -23,6 +23,10 @@ public class LoginViewModel extends ViewModel {
     private MutableLiveData<Status> _logoutStatus = new MutableLiveData<>();
     public LiveData<Status> logoutStatus = (LiveData<Status>) _logoutStatus;
 
+    private MutableLiveData<Boolean> _isUserLoggedIn = new MutableLiveData<Boolean>();
+    public LiveData<Boolean> isUserLoggedIn = (LiveData<Boolean>) _isUserLoggedIn;
+
+
 
     public LoginViewModel(AuthService authService) {
         this.authService = authService;
@@ -40,6 +44,9 @@ public class LoginViewModel extends ViewModel {
         authService.signOut();
     }
 
+    public void checkUserExistence() {
+        authService.getLoginStatus((status, message) -> _isUserLoggedIn.setValue(status));
+    }
 
 //    public void fbLoginToFundoNotes(AccessToken token) {
 //        authService.fbLogin(token, (user, status) -> _userFBLoginStatus.setValue(new FBStatus(user, status)));
