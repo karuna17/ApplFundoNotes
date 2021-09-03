@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1086675796918",
+    "project_id": "fundo-notes-app-d5e1f",
+    "storage_bucket": "fundo-notes-app-d5e1f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1086675796918:android:7d4adff42e4ffaad2fb717",
+        "android_client_info": {
+          "package_name": "com.example.fundonotesapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1086675796918-sbr81tiun227m5kl4v0rrv4ph02es8jn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD653l858SyUaFgjf6KvRH2Jl5Iv_8Bc5s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1086675796918-sbr81tiun227m5kl4v0rrv4ph02es8jn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
