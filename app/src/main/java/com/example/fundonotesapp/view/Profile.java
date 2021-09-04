@@ -1,7 +1,6 @@
 package com.example.fundonotesapp.view;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,7 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
@@ -30,25 +31,28 @@ import com.example.fundonotesapp.R;
 import com.example.fundonotesapp.model.AuthService;
 import com.example.fundonotesapp.viewmodel.LoginViewModel;
 import com.example.fundonotesapp.viewmodel.LoginViewModelFactory;
+import com.example.fundonotesapp.viewmodel.ProfileViewModel;
+import com.example.fundonotesapp.viewmodel.ProfileViewModelFactory;
 import com.example.fundonotesapp.viewmodel.SharedViewModel;
 import com.example.fundonotesapp.viewmodel.SharedViewModelFactory;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textview.MaterialTextView;
 
 import org.jetbrains.annotations.NotNull;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import kotlin.Unit;
 import kotlin.jvm.internal.Intrinsics;
 
 public class Profile extends DialogFragment {
-
-    ImageButton cancelButton;
-    FloatingActionButton cameraButton;
-    TextView name, email;
-    Button logoutButton;
-    ImageView profile_image;
-
-    LoginViewModel loginViewModel;
     SharedViewModel sharedViewModel;
+    ProfileViewModel profileViewModel;
+
+    private CircleImageView profile_image;
+    private MaterialTextView profile_name, profile_email;
+    private MaterialButton logoutButton;
+    private ImageView closeIcon;
 
     public Profile() {
     }
@@ -70,72 +74,42 @@ public class Profile extends DialogFragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        profile_image = v.findViewById(R.id.user_picture);
-        name = v.findViewById(R.id.user_name);
-        email = v.findViewById(R.id.user_email);
-        cameraButton = v.findViewById(R.id.camera_btn);
-        cancelButton = v.findViewById(R.id.cancel_btn);
-        logoutButton = v.findViewById(R.id.profile_logout);
+        profile_image = v.findViewById(R.id.profileImageView);
+        profile_name = v.findViewById(R.id.profileName);
+        profile_email = v.findViewById(R.id.profileEmail);
+        closeIcon = v.findViewById(R.id.profileCloseIcon);
+        logoutButton = v.findViewById(R.id.SignOut_Button);
 
-//       loginViewModel = new ViewModelProvider(getContext(), new LoginViewModelFactory(new AuthService())).get(LoginViewModel.class);
-//        sharedViewModel = new ViewModelProvider(getActivity(), new SharedViewModelFactory()).get(SharedViewModel.class);
+        profileViewModel = new ViewModelProvider(this, new ProfileViewModelFactory(new AuthService())).get(ProfileViewModel.class);
+        sharedViewModel = new ViewModelProvider((ViewModelStoreOwner) getActivity(), new SharedViewModelFactory()).get(SharedViewModel.class);
+
         return v;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        createDialougeBox();
+
+        closeIcon.setOnClickListener(v -> dismiss());
+        signout();
+
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void createDialougeBox() {
-        Dialog dialouge = new Dialog(getContext());
-        dialouge.setTitle("User Profile");
-        dialouge.setContentView(R.layout.fragment_profile);
-
-        profile_image.setImageResource(R.drawable.iconimg);
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialouge.dismiss();
-            }
-        });
-
+    private void signout() {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginViewModel.normalLogout();
-                sharedViewModel.set_gotoLoginPageStatus(true);
+             profileViewModel.logout();
+             profileViewModel.logoutStatus.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                 @Override
+                 public void onChanged(Boolean aBoolean) {
+                    sharedViewModel.set_gotoLoginPageStatus(true);
+                    sharedViewModel.set_gotoHomePageStatus(false);
+                 }
+             });
+             dismiss();
             }
         });
-
-//        cameraButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                ImagePicker.Companion.with(getActivity()).crop().cropSquare().maxResultSize(1080,1080,true);
-//                ImagePicker.Companion.with(getActivity())
-//                        .crop()                    //Crop image(Optional), Check Customization for more option
-//                        .cropOval()                //Allow dimmed layer to have a circle inside
-//                        .cropFreeStyle()        //Let the user to resize crop bounds
-//                        .galleryOnly()          //We have to define what image provider we want to use
-//                        .maxResultSize(1080, 1080, true)    //Final image resolution will be less than 1080 x 1080(Optional)
-//                        .createIntent();
-//            }
-//        });
-        dialouge.show();
-    }
-
-    public static Profile createNewInstace() {
-        Profile profile = new Profile();
-        return profile;
-    }
-
-    private void forSelctingImage() {
-
     }
 
     @Override

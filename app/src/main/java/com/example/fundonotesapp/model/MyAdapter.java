@@ -66,7 +66,7 @@ public class MyAdapter extends RecyclerView.Adapter<NotesHolder> implements Filt
         Notes note = notesList.get(position);
         holder.bindNotes(note);
         Log.d(TAG, "onBindViewHolder: Title: " + note.getNoteTitle() + " Content: " + note.getNoteContent());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EditNotes editNotes = new EditNotes();

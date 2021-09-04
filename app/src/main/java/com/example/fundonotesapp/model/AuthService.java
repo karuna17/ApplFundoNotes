@@ -46,6 +46,7 @@ public class AuthService {
     public final String MY_NOTES_COLLECTION = "myNotes";
 
 
+
     public void loginUser(User user, AuthListener listner) {
         mAuth.signInWithEmailAndPassword(user.getEmail(), user.getPasswod()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override

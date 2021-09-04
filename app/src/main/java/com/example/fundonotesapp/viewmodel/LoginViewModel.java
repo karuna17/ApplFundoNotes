@@ -26,8 +26,6 @@ public class LoginViewModel extends ViewModel {
     private MutableLiveData<Boolean> _isUserLoggedIn = new MutableLiveData<Boolean>();
     public LiveData<Boolean> isUserLoggedIn = (LiveData<Boolean>) _isUserLoggedIn;
 
-
-
     public LoginViewModel(AuthService authService) {
         this.authService = authService;
     }
@@ -38,10 +36,6 @@ public class LoginViewModel extends ViewModel {
 
     public void resettingPasswordToFundoNotes(String vmEmail) {
         authService.resetPassword(vmEmail, (status, message) -> _resetPasswordStatus.setValue(new Status(status, message)));
-    }
-
-    public void normalLogout() {
-        authService.signOut();
     }
 
     public void checkUserExistence() {

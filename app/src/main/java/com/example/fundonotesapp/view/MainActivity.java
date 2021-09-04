@@ -94,17 +94,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        loginViewModel.checkUserExistence();
-        loginViewModel.isUserLoggedIn.observe(MainActivity.this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean status) {
-                if (status) {
-                    sharedViewModel.set_gotoHomePageStatus(true);
-                } else {
-                    sharedViewModel.set_gotoLoginPageStatus(true);
-                }
-            }
-        });
     }
 
     private void gotoHomePage() {
@@ -125,6 +114,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void gotoNotePage() {
         toolBar.setVisibility(View.GONE);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AddNotes()).addToBackStack(null).commit();
+    }
+
+    private void setUserLogin() {
+        loginViewModel.checkUserExistence();
+        loginViewModel.isUserLoggedIn.observe(MainActivity.this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean status) {
+                if (status) {
+                    sharedViewModel.set_gotoHomePageStatus(true);
+                } else {
+                    sharedViewModel.set_gotoLoginPageStatus(true);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        setUserLogin();
+        super.onStart();
     }
 
     @Override
@@ -158,12 +167,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction ft = MainActivity.this.getSupportFragmentManager().beginTransaction();
-                Profile showDetails = Profile.createNewInstace();
-                showDetails.show(getFragmentManager(), "Dialouge Fragment");
+                new Profile().show(getSupportFragmentManager(), "User Profile");
             }
         });
-
         return super.onCreateOptionsMenu(menu);
     }
 
