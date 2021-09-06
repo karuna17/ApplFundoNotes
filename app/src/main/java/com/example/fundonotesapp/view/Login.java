@@ -41,7 +41,6 @@ public class Login extends Fragment {
     private TextView createNewAcc, forgotPass;
     private Button loginButton;
     private ProgressBar progBar;
-    private CheckBox rememberMe;
 
     public Login() {
     }
@@ -107,11 +106,10 @@ public class Login extends Fragment {
                     return;
                 }
                 progBar.setVisibility(View.VISIBLE);
-                //Authenticate the user
                 User user = new User(_email, _password);
-                loginViewModel.loginToFundoNotes(user);
+                loginViewModel.loginWithApi(user);
                 loginViewModel.userLoginStatus.observe(Login.this, status -> {
-
+                    Log.d(TAG, "onClick: LoginDetails: "+status.getStatus());
                     if (status.getStatus()) {
                         Toast.makeText(getContext(), status.getMessage(), Toast.LENGTH_SHORT).show();
                         sharedViewModel.set_gotoHomePageStatus(true);

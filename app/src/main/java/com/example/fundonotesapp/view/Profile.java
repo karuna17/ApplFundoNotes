@@ -99,15 +99,15 @@ public class Profile extends DialogFragment {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             profileViewModel.logout();
-             profileViewModel.logoutStatus.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-                 @Override
-                 public void onChanged(Boolean aBoolean) {
-                    sharedViewModel.set_gotoLoginPageStatus(true);
-                    sharedViewModel.set_gotoHomePageStatus(false);
-                 }
-             });
-             dismiss();
+                profileViewModel.logout();
+                profileViewModel.logoutStatus.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean aBoolean) {
+                        sharedViewModel.set_gotoLoginPageStatus(true);
+                        sharedViewModel.set_gotoHomePageStatus(false);
+                    }
+                });
+                dismiss();
             }
         });
     }

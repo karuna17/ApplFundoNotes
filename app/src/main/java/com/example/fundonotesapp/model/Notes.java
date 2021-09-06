@@ -1,5 +1,7 @@
 package com.example.fundonotesapp.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Notes {
     private String noteTitle, noteContent, noteId, userId;
     private long reminderTime;

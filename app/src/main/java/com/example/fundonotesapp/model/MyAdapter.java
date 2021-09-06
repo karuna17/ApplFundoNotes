@@ -13,6 +13,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -35,6 +36,10 @@ public class MyAdapter extends RecyclerView.Adapter<NotesHolder> implements Filt
     private ArrayList<Notes> listOfNotes;
     private Context mContext;
     private DeleteListener deleteListener;
+
+    private static final int LOADING = 0;
+    private static final int ITEM = 1;
+    private boolean isLoadingAdded = false;
 
     public MyAdapter(ArrayList<Notes> notesList, Context mContext, DeleteListener deleteListener) {
         this.notesList = notesList;
@@ -149,12 +154,14 @@ class NotesHolder extends RecyclerView.ViewHolder {
     TextView noteTitle, noteContent;
     CardView mCardView;
     View view;
+    ProgressBar recyclerProgressBar;
 
     public NotesHolder(@NonNull View itemView) {
         super(itemView);
         noteTitle = itemView.findViewById(R.id.note_title);
         noteContent = itemView.findViewById(R.id.note_content);
         mCardView = itemView.findViewById(R.id.notecard);
+        recyclerProgressBar = itemView.findViewById(R.id.recycler_progressBar);
         view = itemView;
     }
 

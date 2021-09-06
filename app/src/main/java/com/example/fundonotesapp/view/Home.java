@@ -8,13 +8,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.fundonotesapp.R;
@@ -29,6 +34,8 @@ import com.example.fundonotesapp.viewmodel.SharedViewModel;
 import com.example.fundonotesapp.viewmodel.SharedViewModelFactory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 
@@ -36,11 +43,19 @@ public class Home extends Fragment {
     private static final String TAG = "Home";
     private FloatingActionButton fabButtonAddNote;
     private RecyclerView mRecyclerview;
-    MyAdapter adapter;
+    private ProgressBar recyclerProgress;
+
     NoteViewModel noteViewModel;
     SharedViewModel sharedViewModel;
 
+    StaggeredGridLayoutManager manager;
     ArrayList<Notes> notes = new ArrayList<>();
+    MyAdapter adapter;
+
+    Boolean isScrolling = false;
+    int currentItems;
+    int totalItems;
+    int[] scrollOutItems;
 
     public Home() {
     }
@@ -58,11 +73,13 @@ public class Home extends Fragment {
 
         fabButtonAddNote = v.findViewById(R.id.floating_btn_AddNote);
         mRecyclerview = v.findViewById(R.id.notelist_recyclerView);
+        recyclerProgress = v.findViewById(R.id.recycler_progressBar);
 
         noteViewModel = new ViewModelProvider(this, new NoteViewModelFactory(new NoteService(new DBHelper(getContext())))).get(NoteViewModel.class);
         sharedViewModel = new ViewModelProvider(getActivity(), new SharedViewModelFactory()).get(SharedViewModel.class);
 
-        mRecyclerview.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerview.setLayoutManager(manager);
         adapter = new MyAdapter(notes, getContext(), deleteListener);
         mRecyclerview.setAdapter(adapter);
 
@@ -76,6 +93,7 @@ public class Home extends Fragment {
         openAddNote();
         getAllNotesFromFirestore();
         searchNote();
+       // recyclerScrolling();
     }
 
     private void openAddNote() {
@@ -128,11 +146,52 @@ public class Home extends Fragment {
         sharedViewModel.queryText.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String text) {
-                Log.d(TAG, "onChanged: for search Text: "+text.toString());
+                Log.d(TAG, "onChanged: for search Text: " + text.toString());
                 adapter.getFilter().filter(text);
             }
         });
     }
+
+//    private void recyclerScrolling() {
+//        mRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(@NonNull @NotNull RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+//                    isScrolling = true;
+//                }
+//            }
+//
+//            @Override
+//            public void onScrolled(@NonNull @NotNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                currentItems = manager.getChildCount();
+//                totalItems = manager.getItemCount();
+//                scrollOutItems = manager.findFirstVisibleItemPositions(null);
+//
+//                if (isScrolling && (currentItems + (scrollOutItems.length) == totalItems)) {
+//                    isScrolling = false;
+//                    fetchData();
+//                }
+//
+//            }
+//        });
+//    }
+//
+//    private void fetchData() {
+//        recyclerProgress.setVisibility(View.VISIBLE);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+////                adapter.setNotesList(notes);
+//                getAllNotesFromFirestore();
+//                adapter.notifyDataSetChanged();
+//                recyclerProgress.setVisibility(View.VISIBLE);
+//            }
+//        }, 5000);
+//    }
+
+
 }
 
 
