@@ -7,34 +7,32 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.fundonotesapp.R;
 import com.example.fundonotesapp.model.AuthService;
 import com.example.fundonotesapp.viewmodel.LoginViewModel;
 import com.example.fundonotesapp.viewmodel.LoginViewModelFactory;
 import com.example.fundonotesapp.viewmodel.SharedViewModel;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import android.app.FragmentManager;
+
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = MainActivity.class.getName();
     private Toolbar toolBar;
     private DrawerLayout drawerLayout;
     private NavigationView navView;
@@ -67,6 +65,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         sharedViewModel.set_gotoLoginPageStatus(true);
 
         observeAppNav();
+
+    }
+
+    public void onConfigurationChanged(Configuration newConfig) {
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            Log.d(TAG, "onConfigurationChanged: PORTRAIT: ");
+            setContentView(R.layout.fragment_login);
+        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Log.d(TAG, "onConfigurationChanged: LANDSCAPE");
+            setContentView(R.layout.fragment_login_horizontal);
+        }
+        super.onConfigurationChanged(newConfig);
+    }
+
+    public void loadFragment(Fragment fragment) {
+        drawerLayout.removeAllViews();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Login()).commit();
     }
 
     private void observeAppNav() {

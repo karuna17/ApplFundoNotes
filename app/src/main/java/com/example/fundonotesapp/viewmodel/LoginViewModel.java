@@ -33,6 +33,9 @@ public class LoginViewModel extends ViewModel {
     public void loginToFundoNotes(User user) {
         authService.loginUser(user, (status, message) -> _userLoginStatus.setValue(new Status(status, message)));
     }
+    public void loginWithApi(User user){
+        authService.loginWithRestApi(user,(status, message) -> _userLoginStatus.setValue(new Status(status,message)));
+    }
 
     public void resettingPasswordToFundoNotes(String vmEmail) {
         authService.resetPassword(vmEmail, (status, message) -> _resetPasswordStatus.setValue(new Status(status, message)));
@@ -49,7 +52,5 @@ public class LoginViewModel extends ViewModel {
 //    public void fbLogoutFundoNotes() {
 //        authService.fbSignout();
 //    }
-    public void loginWithApi(User user){
-        authService.loginWithRestApi(user,(status, message) -> _userLoginStatus.setValue(new Status(status,message)));
-    }
+
 }

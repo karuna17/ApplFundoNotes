@@ -31,6 +31,8 @@ import com.google.firebase.firestore.Query;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -123,7 +125,9 @@ public class AuthService {
         LoginLoader.getLoginDone(new LoginListener() {
             @Override
             public void onLogin(LoginResponse response, boolean status, String message) {
+                Log.d(TAG, "onLogin: Status: " + status);
                 if (status) {
+                    Constants.getInstance().setUserId(response.getLocalId());
                     listener.onAuthComplete(true, " Login Successfully");
 
                 } else {

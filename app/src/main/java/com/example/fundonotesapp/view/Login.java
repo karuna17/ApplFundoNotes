@@ -1,9 +1,8 @@
 package com.example.fundonotesapp.view;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,8 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -34,21 +31,30 @@ import com.example.fundonotesapp.viewmodel.SharedViewModel;
 import com.example.fundonotesapp.viewmodel.SharedViewModelFactory;
 
 public class Login extends Fragment {
-    private static final String TAG = "LoginFragment";
+    private static final String TAG = Login.class.getName();
     private LoginViewModel loginViewModel;
     private SharedViewModel sharedViewModel;
     private EditText email, password;
     private TextView createNewAcc, forgotPass;
     private Button loginButton;
     private ProgressBar progBar;
+    private LayoutInflater inflater;
+    private ViewGroup container;
 
     public Login() {
     }
 
-    public static Login newInstance(String param1, String param2) {
-        Login fragment = new Login();
-        return fragment;
-    }
+//    public void onConfigurationChanged(Configuration newConfig) {
+//        View view = null;
+//
+//        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+//            view = inflater.inflate(R.layout.fragment_login, container, false);
+//        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//            view = inflater.inflate(R.layout.fragment_login_horizontal, container, false);
+//
+//        }
+//        super.onConfigurationChanged(newConfig);
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,18 +64,21 @@ public class Login extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        this.inflater = inflater;
+        this.container = container;
+
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_login, container, false);
-        email = v.findViewById(R.id.inputEmail);
-        password = v.findViewById(R.id.inputPassword);
-        loginButton = v.findViewById(R.id.loginBtn);
-        createNewAcc = v.findViewById(R.id.create_new_acc);
-        forgotPass = v.findViewById(R.id.forgot_password);
-        progBar = v.findViewById(R.id.progress_bar);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        return v;
+        email = view.findViewById(R.id.inputEmail);
+        password = view.findViewById(R.id.inputPassword);
+        loginButton = view.findViewById(R.id.loginBtn);
+        createNewAcc = view.findViewById(R.id.create_new_acc);
+        forgotPass = view.findViewById(R.id.forgot_password);
+        progBar = view.findViewById(R.id.progress_bar);
+
+        return view;
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -109,7 +118,7 @@ public class Login extends Fragment {
                 User user = new User(_email, _password);
                 loginViewModel.loginWithApi(user);
                 loginViewModel.userLoginStatus.observe(Login.this, status -> {
-                    Log.d(TAG, "onClick: LoginDetails: "+status.getStatus());
+                    Log.d(TAG, "onClick: LoginStatus: " + status.getStatus());
                     if (status.getStatus()) {
                         Toast.makeText(getContext(), status.getMessage(), Toast.LENGTH_SHORT).show();
                         sharedViewModel.set_gotoHomePageStatus(true);

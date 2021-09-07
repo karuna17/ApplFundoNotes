@@ -26,6 +26,7 @@ import java.util.Map;
 
 public class NoteService {
 
+    private static final String TAG = NoteService.class.getName();
     private DBHelper dbHelper;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseFirestore fstore = FirebaseFirestore.getInstance();
@@ -42,6 +43,8 @@ public class NoteService {
     public NoteService() {
         super();
     }
+
+
 
     public NoteService(DBHelper dbHelper) {
         this.dbHelper = dbHelper;
@@ -73,18 +76,19 @@ public class NoteService {
 
     public void getNotesFromFirestore(NoteListener listener) {
         fstore.collection(USER_COLLECTION)
-                .document(currentUser.getUid())
+                .document(Constants.getInstance().getUserId())
                 .collection(NOTES_COLLECTION).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                Log.d(TAG, "UserId: "+Constants.getInstance().getUserId());
                 ArrayList<Notes> notesList = new ArrayList<>();
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Notes note = new Notes(document.getString(NOTE_TITLE).toString(),
                                 document.getString(NOTE_CONTENT).toString(),
-                                document.getId(), currentUser.getUid());
+                                document.getId(), Constants.getInstance().getUserId());
                         notesList.add(note);
-//                        dbHelper.fetchNotesFromDB(note.userId,listener);
+                        dbHelper.fetchNotesFromDB(note.getUserId(),listener);
                     }
                     listener.onNotesFetched(true, "All Notes Fetch Successfully", notesList);
                     Log.d("Note Status", "onComplete: " + notesList.size());
